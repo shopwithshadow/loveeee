@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Boo chan ❤️</title>
+<style>
+/* --- General Styles --- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom right, #ff758c, #ffb199);
+    text-align: center;
+    overflow: hidden;
+    color: white;
+}
+
+/* --- Intro Question --- */
+#introPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+#introPage h1 {
+    font-size: 50px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px #fff;
+}
+#introPage button {
+    padding: 15px 40px;
+    font-size: 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+#yesIntro:hover { transform: scale(1.1); box-shadow: 0 0 15px #fff;}
+#noIntro:hover { transform: scale(1.1); }
+
+/* --- Slide Gallery --- */
+#galleryPage {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.slide-container {
+    max-width: 600px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+}
+.slide-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    display: none;
+    animation: fadeScale 4s ease-in-out forwards;
+}
+@keyframes fadeScale {
+    0% {opacity:0; transform: scale(1.05);}
+    50% {opacity:1; transform: scale(1);}
+    100% {opacity:0; transform: scale(1.05);}
+}
+
+/* --- Quote under image --- */
+.quote {
+    font-size: 24px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* --- Date Question --- */
+#dateQuestion {
+    display: none;
+    font-size: 28px;
+    margin-top: 30px;
+}
+#dateQuestion button {
+    padding: 12px 30px;
+    font-size: 18px;
+    margin: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* --- YES Hearts Animation --- */
+.heart {
+    position: absolute;
+    font-size: 20px;
+    animation: float 4s linear infinite;
+}
+@keyframes float {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-600px); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- --- Intro Page --- -->
+<div id="introPage">
+    <h1>Will you be my Valentine? ❤️</h1>
+    <div>
+        <button id="yesIntro">YES</button>
+        <button id="noIntro">NO</button>
+    </div>
+</div>
+
+<!-- --- Gallery Page --- -->
+<div id="galleryPage">
+    <div class="slide-container">
+        <img src="photo1.JPG" alt="Slide 1">
+        <div class="quote" id="quote1">"Every moment with you feels like a dream…"</div>
+
+        <img src="photo2.JPG" alt="Slide 2">
+        <div class="quote" id="quote2">"Your smile lights up my world…"</div>
+
+        <img src="photo3.JPG" alt="Slide 3">
+        <div class="quote" id="quote3">"With you, everything is magical…"</div>
+
+        <img src="photo4.JPG" alt="Slide 4">
+        <div class="quote" id="quote4">"You are my heart’s melody…"</div>
+
+        <img src="photo5.JPG" alt="Slide 5">
+        <div class="quote" id="quote5">"I want every day to be with you…"</div>
+    </div>
+
+    <div id="dateQuestion">
+        Would you go on a date with me on 17/02/2026? ❤️
+        <br>
+        <button id="yesDate">YES</button>
+        <button id="noDate">NO</button>
+    </div>
+</div>
+
+<audio id="bgMusic" src="love.mp3" loop></audio>
+
+<script>
+// --- NO buttons jump randomly ---
+function randomMove(btn){
+    btn.style.position = "absolute";
+    btn.style.left = Math.random()*(window.innerWidth - btn.offsetWidth)+"px";
+    btn.style.top = Math.random()*(window.innerHeight - btn.offsetHeight)+"px";
+}
+
+// --- Intro Page Buttons ---
+const yesIntro = document.getElementById("yesIntro");
+const noIntro = document.getElementById("noIntro");
+yesIntro.addEventListener("click", startGallery);
+noIntro.addEventListener("mouseover", ()=>randomMove(noIntro));
+
+// --- Start Gallery ---
+function startGallery(){
+    document.getElementById("introPage").style.display = "none";
+    document.getElementById("galleryPage").style.display = "flex";
+
+    // start music
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.4;
+    music.play();
+
+    // floating hearts
+    setInterval(()=>{ createHeart(); }, 500);
+
+    // start slide show
+    showSlides();
+}
+
+// --- Floating Hearts ---
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random()*window.innerWidth+"px";
+    heart.style.top = "90vh";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(), 4000);
+}
+
+// --- Slide show with quotes ---
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide-container img");
+const quotes = document.querySelectorAll(".slide-container .quote");
+
+function showSlides(){
+    slides.forEach((img,i)=>{ img.style.display="none"; quotes[i].style.opacity=0; });
+    currentSlide = 0;
+    displaySlide(currentSlide);
+
+    const interval = setInterval(()=>{
+        slides[currentSlide].style.display="none";
+        quotes[currentSlide].style.opacity=0;
+        currentSlide++;
+        if(currentSlide >= slides.length){
+            clearInterval(interval);
+            document.getElementById("dateQuestion").style.display = "block";
+        } else {
+            displaySlide(currentSlide);
+        }
+    }, 4000);
+}
+
+function displaySlide(i){
+    slides[i].style.display="block";
+    quotes[i].style.opacity=1;
+}
+
+// --- Date Question Buttons ---
+const yesDate = document.getElementById("yesDate");
+const noDate = document.getElementById("noDate");
+noDate.addEventListener("mouseover", ()=>randomMove(noDate));
+yesDate.addEventListener("click", ()=>{
+    // final hearts and sparkle animation
+    for(let i=0;i<50;i++){ setTimeout(createHeart,i*100); }
+    alert("Yay! You said YES! 💖");
+    window.close();
+});
+</script>
+
+</body>
+</html>
